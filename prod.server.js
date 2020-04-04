@@ -9,7 +9,7 @@ const ratings = appData.ratings
 
 const router = express.Router()
 
-router.get('/seller',function (req,res) {
+router.get('/seller', function (req,res) {
   res.json({
     errno: 0,
     data: seller

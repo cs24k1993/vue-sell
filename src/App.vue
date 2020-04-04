@@ -1,6 +1,7 @@
 <template>
   <div id="app">
-    <v-header></v-header>
+    <!--为什么v-header组件有seller属性？-->
+    <v-header :seller="seller"></v-header>
     <!--border-1px不是函数吗？怎么当类名使用了呢？-->
     <div class="tab border-1px">
       <div class="tab-item">
@@ -19,8 +20,22 @@
 
 <script>
   import VHeader from './components/v-header/v-header'
-
+  const ERR_OK = 0
   export default {
+    data() {
+      return {
+        seller: {}
+      }
+    },
+    created() {
+      this.$http.get('/api/seller').then((response) => {
+        // 转换为json对象
+        response = response.body
+        if (response.errno === ERR_OK) {
+          this.seller = response.data
+        }
+      })
+    },
     components: {
       VHeader
     }
