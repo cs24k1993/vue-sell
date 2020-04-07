@@ -1,7 +1,7 @@
 <template>
-  <div id="app">
+  <div>
     <!--为什么v-header组件有seller属性？-->
-    <v-header :seller="seller"></v-header>
+    <Header :seller="seller"></Header>
     <!--border-1px不是函数吗？怎么当类名使用了呢？-->
     <div class="tab border-1px">
       <div class="tab-item">
@@ -18,9 +18,11 @@
   </div>
 </template>
 
-<script>
-  import VHeader from './components/v-header/v-header'
+<script type="text/ecmascript-6">
+  import Header from './components/v-header/v-header'
+
   const ERR_OK = 0
+
   export default {
     data() {
       return {
@@ -29,38 +31,39 @@
     },
     created() {
       this.$http.get('/api/seller').then((response) => {
-        // 转换为json对象
+        // 提取数据
         response = response.body
         if (response.errno === ERR_OK) {
+          // response.data是指什么？
           this.seller = response.data
         }
       })
     },
     components: {
-      VHeader
+      Header
     }
   }
 </script>
 
 <style lang="stylus" rel="stylesheet/stylus">
   @import "./common/stylus/mixin.styl"
-  #app
-    .tab
-      display: flex
-      width: 100%
-      height: 40px
-      line-height: 40px
-      border-1px(rgba(7, 17, 27, 0.1))
-      .tab-item
-        flex: 1
-        text-align: center
-        // router-link在网页中被渲染成a标签，设置css时要用a标签
-        & > a
-          display: block
-          text-decoration: none
-          font-size: 14px
-          color: rgb(77, 85, 93)
-          // 相当于a.active，为什么可以这么用？
-          &.active
-            color: rgb(240, 20, 20)
+
+  .tab
+    display: flex
+    width: 100%
+    height: 40px
+    line-height: 40px
+    border-1px(rgba(7, 17, 27, 0.1))
+    .tab-item
+      flex: 1
+      text-align: center
+      // router-link在网页中被渲染成a标签，设置css时要用a标签
+      & > a
+        display: block
+        text-decoration: none
+        font-size: 14px
+        color: rgb(77, 85, 93)
+        // 相当于a.active，为什么可以这么用？
+        &.active
+          color: rgb(240, 20, 20)
 </style>

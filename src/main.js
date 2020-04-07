@@ -8,7 +8,7 @@ import seller from 'components/seller/seller'
 
 import 'common/stylus/index.styl'
 
-// 为什么要Vue.use呢？
+// 为什么要Vue.use呢？（注册全局方法，在其他组件也可以用VueResource的方法）
 Vue.use(VueRouter)
 Vue.use(VueResource)
 

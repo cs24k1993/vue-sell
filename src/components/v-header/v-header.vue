@@ -33,6 +33,7 @@
       <img :src="seller.avatar" width="100%" height="100%">
     </div>
     <div v-show="detailShow" class="detail">
+      <!--没有浮动吧？为什么要清除浮动？-->
       <div class="detail-wrapper clearfix">
         <div class="detail-main">
           <h1 class="name">{{seller.name}}</h1>
@@ -90,8 +91,8 @@
       }
     },
     created () {
-      this.classMap = ['decrease_1', 'discount_1', 'special_1', 'invoice_1',
-        'guarantee_1']
+      this.classMap = ['decrease', 'discount', 'special', 'invoice',
+        'guarantee']
     },
     components: {
       star
@@ -101,6 +102,7 @@
 
 <style lang="stylus" rel="stylesheet/stylus">
   @import "../../common/stylus/mixin"
+
   .header
     position: relative
     overflow: hidden
@@ -138,7 +140,7 @@
         .support
           .icon
             display: inline-block
-            vertical-align: bottom
+            vertical-align: middle
             width: 12px
             height: 12px
             margin-right: 4px
@@ -182,7 +184,6 @@
       white-space: nowrap
       overflow: hidden
       text-overflow: ellipsis
-      display: inline-block
       background: rgba(7,17,27,0.2)
       .bulletin-title
         display: inline-block
@@ -275,7 +276,10 @@
                 &.special
                   bg-image('special_2')
               .text
-                line-height: 12
+                line-height: 16px
+                font-size: 12px
+              .text
+                line-height: 16px
                 font-size: 12px
           .bulletin
             width: 80%
