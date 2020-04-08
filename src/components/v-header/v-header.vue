@@ -252,7 +252,7 @@
           .supports
             width: 80%
             margin: 0 auto
-            .support.item
+            .support-item
               padding: 0 12px
               margin-bottom: 12px
               &:last-child
