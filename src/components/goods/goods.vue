@@ -38,7 +38,7 @@
         </li>
       </ul>
     </div>
-    <shopcart :delivery-price="seller.deliveryPrice" :min-price="seller.minPrice"></shopcart>
+    <shopcart ref="shopcart" :select-foods="selectFoods" :delivery-price="seller.deliveryPrice" :min-price="seller.minPrice"></shopcart>
   </div>
 </template>
 
@@ -72,6 +72,17 @@
           }
         }
         return 0
+      },
+      selectFoods() {
+        let foods = []
+        this.goods.forEach((good) => {
+          good.foods.forEach((food) => {
+            if (food.count) {
+              foods.push(food)
+            }
+          })
+        })
+        return foods
       }
     },
     created() {
@@ -97,6 +108,9 @@
         let foodList = this.$refs.foodswrapper.getElementsByClassName('food-list-hook')
         let el = foodList[index]
         this.foodsScroll.scrollToElement(el, 300)
+      },
+      _drop(traget) {
+        this.$refs.shopcart.drop(traget)
       },
       _initScroll() {
         this.menuScroll = new BScroll(this.$refs.menuwrapper, {
@@ -126,6 +140,12 @@
     components: {
       shopcart,
       cartcontrol
+    },
+    // 这个事件的作用是什么？
+    events: {
+      'cart.add'(target) {
+        this._drop(target)
+      }
     }
   }
 </script>
