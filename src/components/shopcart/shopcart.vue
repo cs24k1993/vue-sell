@@ -127,11 +127,12 @@
       },
       listShow: {
         // 不理解为什么同时使用get和set？为什么不能把get去掉呢？
+        // get获取属性值，set监听属性值的变化
         get: function() {
           if (!this.totalCount) {
             return false
           }
-          return this.fold
+          return !this.fold
         },
         set: function () {
           // totalCount为0时，不显示购物车列表
@@ -276,7 +277,7 @@
       position: absolute
       top: 0
       left: 0
-      z-index: -1
+      z-index: 3
       width: 100%
       // 购物车的动画没有写
       .list-header

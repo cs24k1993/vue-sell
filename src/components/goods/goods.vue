@@ -1,44 +1,48 @@
 <template>
-  <div class="goods">
-    <div class="menu-wrapper" ref="menuwrapper">
+  <div>
+    <div class="goods">
+      <div class="menu-wrapper" ref="menuwrapper">
         <ul>
-        <li v-for="(item,index) in goods" :key="index" class="menu-item" :class="{'current': currentIndex === index}" @click="selectMenu(index,$event)">
+          <li v-for="(item,index) in goods" :key="index" class="menu-item" :class="{'current': currentIndex === index}" @click="selectMenu(index,$event)">
           <span class="text border-1px">
             <span v-show="item.type>0" class="icon" :class="classMap[item.type]"></span>{{item.name}}
           </span>
-        </li>
-      </ul>
+          </li>
+        </ul>
+      </div>
+      <div class="foods-wrapper" ref="foodswrapper">
+        <ul>
+          <li v-for="(item,index) in goods" :key="index" class="food-list food-list-hook">
+            <h1 class="title">{{item.name}}</h1>
+            <ul>
+              <!-- 这里为什么要获取event？-->
+              <li @click="selectFood(food,$event)" v-for="(food,index) in item.foods" :key="index" class="food-item border-1px">
+                <div class="icon">
+                  <img width="57" height="57" :src="food.icon">
+                </div>
+                <div class="content">
+                  <h2 class="name">{{food.name}}</h2>
+                  <p class="desc">{{food.description}}</p>
+                  <div class="extra">
+                    <span class="count">月售{{food.sellCount}}份</span>
+                    <span>好评率{{food.rating}}%</span>
+                  </div>
+                  <div class="price">
+                    <span class="now">￥{{food.price}}</span>
+                    <span class="old" v-show="food.oldPrice">￥{{food.oldPrice}}</span>
+                  </div>
+                  <div class="cartcontrol-wrapper">
+                    <cartcontrol :food="food"></cartcontrol>
+                  </div>
+                </div>
+              </li>
+            </ul>
+          </li>
+        </ul>
+      </div>
+      <shopcart ref="shopcart" :select-foods="selectFoods" :delivery-price="seller.deliveryPrice" :min-price="seller.minPrice"></shopcart>
     </div>
-    <div class="foods-wrapper" ref="foodswrapper">
-      <ul>
-        <li v-for="(item,index) in goods" :key="index" class="food-list food-list-hook">
-          <h1 class="title">{{item.name}}</h1>
-          <ul>
-            <li v-for="(food,index) in item.foods" :key="index" class="food-item border-1px">
-              <div class="icon">
-                <img width="57" height="57" :src="food.icon">
-              </div>
-              <div class="content">
-                <h2 class="name">{{food.name}}</h2>
-                <p class="desc">{{food.description}}</p>
-                <div class="extra">
-                  <span class="count">月售{{food.sellCount}}份</span>
-                  <span>好评率{{food.rating}}%</span>
-                </div>
-                <div class="price">
-                  <span class="now">￥{{food.price}}</span>
-                  <span class="old" v-show="food.oldPrice">￥{{food.oldPrice}}</span>
-                </div>
-                <div class="cartcontrol-wrapper">
-                  <cartcontrol :food="food"></cartcontrol>
-                </div>
-              </div>
-            </li>
-          </ul>
-        </li>
-      </ul>
-    </div>
-    <shopcart ref="shopcart" :select-foods="selectFoods" :delivery-price="seller.deliveryPrice" :min-price="seller.minPrice"></shopcart>
+    <food :food="selectedFood" ref="food"></food>
   </div>
 </template>
 
@@ -46,20 +50,24 @@
   import BScroll from 'better-scroll'
   import shopcart from 'components/shopcart/shopcart'
   import cartcontrol from 'components/cartcontrol/cartcontrol'
+  import food from 'components/food/food'
 
   const ERR_OK = 0
 
   export default {
     props: {
+      // 传入的参数指明数据类型
       seller: {
         type: Object
       }
     },
+    // data是一个函数，参数作为函数的返回值，并初始化
     data() {
       return {
         goods: [],
         listHeight: [],
-        scrollY: 0
+        scrollY: 0,
+        selectedFood: {}
       }
     },
     computed: {
@@ -73,6 +81,7 @@
         }
         return 0
       },
+      // 这里怎么确定选择了哪些Food？
       selectFoods() {
         let foods = []
         this.goods.forEach((good) => {
@@ -109,6 +118,13 @@
         let el = foodList[index]
         this.foodsScroll.scrollToElement(el, 300)
       },
+      selectFood(food, event) {
+        if (!event._constructed) {
+          return
+        }
+        this.selectedFood = food
+        this.$refs.food.show()
+      },
       _drop(traget) {
         this.$refs.shopcart.drop(traget)
       },
@@ -139,7 +155,8 @@
     },
     components: {
       shopcart,
-      cartcontrol
+      cartcontrol,
+      food
     },
     // 这个事件的作用是什么？
     events: {
@@ -155,6 +172,7 @@
 
   .goods
     display: flex
+    // 为什么用绝对定位？
     position: absolute
     top: 177px
     bottom: 46px
